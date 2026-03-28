@@ -1,0 +1,102 @@
+
+# Student Database Management
+
+
+# Function to calculate percentage, grade, and pass/fail per subject
+def calculate_result(marks):
+    total = sum(marks.values())
+    percentage = total / 3
+    if percentage >= 90: grade = "A"
+    elif percentage >= 80: grade = "B"
+    elif percentage >= 70: grade = "C"
+    elif percentage >= 60: grade = "D"
+    else: grade = "F"
+
+    # Check pass/fail for each subject
+    subject_status = {}
+    for subject, score in marks.items():
+        if score >= 50:
+            subject_status[subject] = "Pass"
+        else:
+            subject_status[subject] = "Fail"
+
+    return round(percentage, 2), grade, subject_status
+
+# Start with an empty student database
+student_db = {}
+
+
+# Functions for Menu Operations
+
+def add_student():
+    usn = input("Enter USN: ")
+    name = input("Enter name: ")
+    py = int(input("Enter Python marks: "))
+    java = int(input("Enter Java marks: "))
+    c = int(input("Enter C marks: "))
+    marks = {"Python": py, "Java": java, "C": c}
+    student_db[usn] = {"name": name, "marks": marks}
+    print("Student added successfully!")
+
+def display_students():
+    if not student_db:
+        print("No students in database.")
+    else:
+        for usn, info in student_db.items():
+            percentage, grade, subject_status = calculate_result(info["marks"])
+            print(f"\nUSN: {usn}, Name: {info['name']}")
+            print(f"Marks: {info['marks']}")
+            print(f"Percentage: {percentage}%")
+            print(f"Grade: {grade}")
+            print("Subject Results:")
+            for subject, status in subject_status.items():
+                print(f" - {subject}: {status}")
+
+def search_student():
+    usn = input("Enter USN to search: ")
+    if usn in student_db:
+        info = student_db[usn]
+        percentage, grade, subject_status = calculate_result(info["marks"])
+        print(f"\nUSN: {usn}, Name: {info['name']}")
+        print(f"Marks: {info['marks']}")
+        print(f"Percentage: {percentage}%")
+        print(f"Grade: {grade}")
+        print("Subject Results:")
+        for subject, status in subject_status.items():
+            print(f" - {subject}: {status}")
+    else:
+        print(" Student not found.")
+
+def delete_student():
+    usn = input("Enter USN to delete: ")
+    if usn in student_db:
+        del student_db[usn]
+        print("Student deleted successfully!")
+    else:
+        print("Student not found.")
+
+# Main Menu Loop
+
+while True:
+    print("\n--- Student Database Menu ---")
+    print("1. Add Student")
+    print("2. Display Students")
+    print("3. Search Student")
+    print("4. Delete Student")
+    print("5. Exit")
+
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        add_student()
+    elif choice == "2":
+        display_students()
+    elif choice == "3":
+        search_student()
+    elif choice == "4":
+        delete_student()
+    elif choice == "5":
+        print("Exiting program... Goodbye!")
+        break
+    else:
+        print("❌ Invalid choice. Please try again.")
